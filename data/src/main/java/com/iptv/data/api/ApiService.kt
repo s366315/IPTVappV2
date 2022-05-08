@@ -3,7 +3,6 @@ package com.iptv.data.api
 import com.iptv.data.response.ChannelUrlResponse
 import com.iptv.data.response.ChannelsResponse
 import com.iptv.data.response.LoginResponse
-import com.iptv.data.response.ResponseWrapper
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -26,7 +25,7 @@ interface ApiService {
     @GET("epg_current")
     suspend fun channelsById(
         @Query("MWARE_SSID") ssid: String,
-        @Query("epg") epg: String? = "3",
+        @Query("epg") epg: String? = "2",
         @Query("cids") cids: String,
     ): ChannelsResponse
 

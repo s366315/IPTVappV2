@@ -55,35 +55,51 @@ class LiveFragmentViewModelImpl @Inject constructor(
     init {
 
         viewModelScope.launch {
-            setLoading(true)
-
-            val channels = channelListUseCase.subscribe()
-
-            when (channels) {
-                is Result.Success -> {
-                    val channelsList = channels.data
-                    timer.emitList {
-                        needToUpdateChannels.tryEmit(
-                            channelsList.filter { it.isVideo }.filter { it.epgEnd <= System.currentTimeMillis().div(1000) }.map { it.id }
-                        )
-//                        channelListState.tryEmit(channels.data)
-                    }
-                    channelListState.tryEmit(channels.data)
-//                    channelListState.value = channels.data
-                }
-                is Result.Error -> {
-                    setError(channels.message)
-                }
-            }
-
-            setLoading(false)
+            getChannels()
         }
 
         viewModelScope.launch {
             needToUpdateChannels.collectLatest {
                 if (it.isNotEmpty()) {
                     println("channels $it is need to update")
+                    getChannels()
                 }
+            }
+        }
+    }
+
+    private suspend fun getChannels() {
+        setLoading(true)
+
+        val channels = channelListUseCase.subscribe()
+
+        when (channels) {
+            is Result.Success -> {
+                val channelsList = channels.data
+                timer.emitList {
+                    needToUpdateChannels.tryEmit(
+                        channelsList.filter { it.isVideo }.filter { it.epgEnd <= System.currentTimeMillis().div(1000) }.map { it.id }
+                    )
+                }
+                channelListState.tryEmit(channels.data)
+            }
+            is Result.Error -> {
+                setError(channels.message)
+            }
+        }
+
+        setLoading(false)
+    }
+
+    private suspend fun updateChannels(list: List<String>) {
+        val channels = channelsByIdUseCase.createObservable(ChannelsByIdUseCase.Params(list))
+
+        when (channels) {
+            is Result.Success -> {
+                channelListState.tryEmit(channels.data)
+            }
+            is Result.Error -> {
+                setError(channels.message)
             }
         }
     }

@@ -26,7 +26,7 @@ class LiveChannelsAdapter @Inject constructor() :
             override fun areItemsTheSame(
                 oldItem: Channel, newItem: Channel
             ): Boolean {
-                return oldItem == newItem
+                return true
             }
 
             override fun areContentsTheSame(
