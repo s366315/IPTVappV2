@@ -8,4 +8,8 @@ interface ChannelListRepository {
         showProtected: String?,
         protectedCode: String?
     ): Result<List<Channel>>
+
+    suspend fun channelListById(
+        cids: List<String>
+    ): Result<List<Channel>>
 }

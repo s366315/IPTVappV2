@@ -50,11 +50,13 @@ class LiveChannelsAdapter @Inject constructor() :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(channel: Channel) = with(binding) {
             root.setOnClickListener { clickListener.invoke(channel) }
-            labelChannelTime.isVisible = channel.isVideo
+            val start = channel.epgStart.timestampToEpg()
+            val end = channel.epgEnd.timestampToEpg()
+
             labelChannelName.text = channel.name
             labelProgramName.text = channel.epgProgname
-            labelChannelTime.text =
-                "${channel.epgStart.timestampToEpg()} - ${channel.epgEnd.timestampToEpg()}"
+            labelChannelTime.isVisible = channel.isVideo
+            labelChannelTime.text = "$start - $end"
             Glide.with(root)
                 .load(BuildConfig.BASE_URL + channel.icon.substring(1, channel.icon.length))
                 .placeholder(

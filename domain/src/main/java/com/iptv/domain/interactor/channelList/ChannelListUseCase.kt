@@ -5,9 +5,8 @@ import com.iptv.domain.entities.Result
 import com.iptv.domain.interactor.UseCase
 import com.iptv.domain.repository.ChannelListRepository
 
-class ChannelListUseCase(
-    private val channelListRepository: ChannelListRepository
-) : UseCase<ChannelListUseCase.Params, List<Channel>>() {
+class ChannelListUseCase(private val channelListRepository: ChannelListRepository) :
+    UseCase<ChannelListUseCase.Params, List<Channel>>() {
 
     data class Params(
         val showProtected: Boolean? = null,

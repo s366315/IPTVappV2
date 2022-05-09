@@ -6,7 +6,6 @@ import com.iptv.domain.interactor.channelsById.ChannelsByIdUseCase
 import com.iptv.domain.interactor.signin.LoginUseCase
 import com.iptv.domain.repository.ChannelListRepository
 import com.iptv.domain.repository.ChannelUrlRepository
-import com.iptv.domain.repository.ChannelsByIdRepository
 import com.iptv.domain.repository.LoginRepository
 import dagger.Module
 import dagger.Provides
@@ -24,12 +23,12 @@ open class UseCaseModule {
     }
 
     @Provides
-    fun channelUrlUseCase(channelUrlRepository: ChannelUrlRepository): ChannelUrlUseCase {
-        return ChannelUrlUseCase(channelUrlRepository)
+    fun channelsByIdUseCase(channelListRepository: ChannelListRepository): ChannelsByIdUseCase {
+        return ChannelsByIdUseCase(channelListRepository)
     }
 
     @Provides
-    fun channelsByIdUseCase(channelsByIdRepository: ChannelsByIdRepository): ChannelsByIdUseCase {
-        return ChannelsByIdUseCase(channelsByIdRepository)
+    fun channelUrlUseCase(channelUrlRepository: ChannelUrlRepository): ChannelUrlUseCase {
+        return ChannelUrlUseCase(channelUrlRepository)
     }
 }

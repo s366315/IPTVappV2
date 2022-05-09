@@ -33,4 +33,23 @@ class ChannelListRepositoryImpl @Inject constructor(
             } ?: emptyList()
         )
     }
+
+    override suspend fun channelListById(cids: List<String>): Result<List<Channel>> {
+        val data = apiService.channelsById(
+            ssid = preferences.sid,
+            cids = cids.joinToString(separator = ",")
+        )
+
+        data.error?.let {
+            return Result.Error(it.code.toInt(), it.message)
+        }
+
+        return Result.Success(
+            data.groups?.flatMap { group ->
+                group.channels.map {
+                    it.toChannel(group)
+                }
+            } ?: emptyList()
+        )
+    }
 }
