@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -19,7 +20,8 @@ import com.google.android.exoplayer2.Player
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
-import com.iptv.BaseFragment
+import com.iptv.base.BaseFragment
+import com.iptv.R
 import com.iptv.databinding.FragmentLiveBinding
 import com.iptv.domain.entities.Channel
 import com.iptv.live.adapters.LiveChannelsAdapter
@@ -64,10 +66,12 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
         viewModel.channelUrlState bind channelUrlDataObserver
         viewModel.onRootClickState bind hideBottomSheetObserver
         viewModel.onBtnShowChannelsClickState bind channelsBtnObserver
+        viewModel.onBtnSettingsClickState bind settingsBtnObserver
         viewModel.errorData bind errorConsumer
         viewModel.bottomSheetState bind hideBottomSheetStateObserver//todo описать функцию стейта
 
         binding.btnShowChannels.clicks() bind viewModel.onBtnShowChannelsClick
+        binding.btnSettings.clicks() bind viewModel.onBtnSettingsClick
 
         initSheetCallbacks()
 
@@ -92,7 +96,8 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
     }
 
     private fun initSheetCallbacks() {
-        bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 viewModel.onSheetState(newState)
             }
@@ -106,7 +111,7 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
     }
 
     private fun initSwipeListener() {
-        binding.root.setOnTouchListener(object: OnSwipeTouchListener(requireContext()) {
+        binding.root.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
             override fun onSwipeBottom() {
                 lifecycleScope.launch {
                     hideBottomSheetObserver(Unit)
@@ -135,9 +140,11 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
 
         when (it) {
             BottomSheetBehavior.STATE_HIDDEN -> {
+                binding.btnSettings.isVisible = false
                 requireActivity().window.hideSystemUI(binding.root)
             }
             else -> {
+                binding.btnSettings.isVisible = true
                 requireActivity().window.showSystemUI(binding.root)
             }
         }
@@ -149,6 +156,10 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
 
     private val channelsBtnObserver: (Unit) -> Unit = {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    private val settingsBtnObserver: (Unit) -> Unit = {
+        findNavController().navigate(R.id.action_fragmentLife_to_fragmentSettings)
     }
 
     private val channelUrlDataObserver: (String) -> Unit = {

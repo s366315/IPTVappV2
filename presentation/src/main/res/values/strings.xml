@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">IP TV</string>
+
+    <string-array name="buffer_array">
+        <item>1000</item>
+        <item>2000</item>
+        <item>5000</item>
+        <item>9000</item>
+    </string-array>
 </resources>

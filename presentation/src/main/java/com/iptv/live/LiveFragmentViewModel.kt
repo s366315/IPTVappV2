@@ -3,7 +3,7 @@ package com.iptv.live
 import android.os.CountDownTimer
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.iptv.BaseViewModel
+import com.iptv.base.BaseViewModel
 import com.iptv.data.preferences.Preferences
 import com.iptv.domain.entities.Channel
 import com.iptv.domain.entities.Result
@@ -14,7 +14,6 @@ import com.iptv.domain.interactor.signin.LoginUseCase
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.nio.BufferOverflowException
 import javax.inject.Inject
 
 abstract class LiveFragmentViewModel : BaseViewModel() {
@@ -22,10 +21,12 @@ abstract class LiveFragmentViewModel : BaseViewModel() {
     abstract val channelUrlState: SharedFlow<String>
     abstract val onRootClickState: SharedFlow<Unit>
     abstract val onBtnShowChannelsClickState: SharedFlow<Unit>
+    abstract val onBtnSettingsClickState: SharedFlow<Unit>
     abstract val bottomSheetState: StateFlow<Int>
 
     abstract var onRootClick: (Unit) -> Unit
     abstract var onBtnShowChannelsClick: (Unit) -> Unit
+    abstract var onBtnSettingsClick: (Unit) -> Unit
     abstract var onChannelClick: (Channel) -> Unit
     abstract var onSheetState: (Int) -> Unit
 }
@@ -42,6 +43,7 @@ class LiveFragmentViewModelImpl @Inject constructor(
     override val channelUrlState = MutableSharedFlow<String>()
     override val onRootClickState = MutableSharedFlow<Unit>()
     override val onBtnShowChannelsClickState = MutableSharedFlow<Unit>()
+    override val onBtnSettingsClickState = MutableSharedFlow<Unit>()
     override val bottomSheetState = MutableStateFlow(BottomSheetBehavior.STATE_COLLAPSED)
 
     val timer = ChannelsTimer()
@@ -55,7 +57,7 @@ class LiveFragmentViewModelImpl @Inject constructor(
     init {
 
         viewModelScope.launch {
-            getChannels()
+//            getChannels()
         }
 
         viewModelScope.launch {
@@ -113,6 +115,12 @@ class LiveFragmentViewModelImpl @Inject constructor(
     override var onBtnShowChannelsClick: (Unit) -> Unit = {
         viewModelScope.launch {
             onBtnShowChannelsClickState.emit(Unit)
+        }
+    }
+
+    override var onBtnSettingsClick: (Unit) -> Unit = {
+        viewModelScope.launch {
+            onBtnSettingsClickState.emit(Unit)
         }
     }
 

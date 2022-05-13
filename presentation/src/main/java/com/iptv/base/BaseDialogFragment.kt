@@ -1,9 +1,9 @@
-package com.iptv
+package com.iptv.base
 
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import androidx.core.view.MotionEventCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
+abstract class BaseDialogFragment<VB : ViewBinding, VM : BaseViewModel> : DialogFragment() {
     private var _binding: VB? = null
     protected val binding: VB
         get() = _binding!!

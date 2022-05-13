@@ -48,13 +48,19 @@
                 android:id="@+id/input_phone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="phone" />
+                android:hint="phone"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal"
+                android:maxLength="10" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_code"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="sms code" />
+                android:hint="sms code"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
+                android:maxLength="10" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_sign_in"

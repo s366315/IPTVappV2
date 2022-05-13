@@ -3,6 +3,8 @@ package com.iptv.data.api
 import com.iptv.data.response.ChannelUrlResponse
 import com.iptv.data.response.ChannelsResponse
 import com.iptv.data.response.LoginResponse
+import com.iptv.data.response.SuccessOperation
+import com.iptv.domain.entities.Result
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,7 +14,8 @@ interface ApiService {
         @Query("login") login: String,
         @Query("pass") password: String,
         @Query("softid") softId: String,
-        @Query("cli_serial") cliSerial: String
+        @Query("cli_serial") cliSerial: String,
+        @Query("settings") settings: String
     ): LoginResponse
 
     @GET("channel_list")
@@ -34,4 +37,13 @@ interface ApiService {
         @Query("MWARE_SSID") ssid: String,
         @Query("cid") channelId: String
     ): ChannelUrlResponse
+
+    @GET("settings_set")
+    suspend fun setSettings(
+        @Query("MWARE_SSID") ssid: String,
+        @Query("var") variant: String,
+        @Query("val") value: String
+    ): SuccessOperation
+
+    //settings_set?var=<pcode|http_caching|stream_server|timeshift|timezone>&val=<value>
 }

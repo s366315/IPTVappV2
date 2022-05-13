@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="is_tablet">true</bool>
+    <dimen name="channels_menu_horizontal_padding">160dp</dimen>
+    <dimen name="dialog_width">800dp</dimen>
+    <dimen name="dialog_height">500dp</dimen>
+</resources>

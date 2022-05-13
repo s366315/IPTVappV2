@@ -1,5 +1,6 @@
 package com.iptv.data.response
 
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(
@@ -7,7 +8,8 @@ data class LoginResponse(
     @SerializedName("sid_name")
     val sidName: String?,
     val account: Account?,
-    val services: Services?
+    val services: Services?,
+    val settings: Settings?
 ) : ModelResponse()
 
 data class Account(
@@ -26,3 +28,15 @@ data class Services(
     @SerializedName("start_film")
     val startFilm: Int?
 )
+
+data class Settings(
+    @SerializedName("http_caching")
+    val httpCaching: HttpCaching?
+)
+
+data class HttpCaching(
+    val value: String?,
+    val list: List<Int>?
+)
+
+fun List<Int>.toJString() = Gson().toJson(this)

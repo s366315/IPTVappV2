@@ -1,5 +1,6 @@
 package com.iptv.data.preferences
 
+
 interface Preferences {
     var sid: String
     var sidName: String
@@ -10,5 +11,7 @@ interface Preferences {
     var packetExpire: Int
     var vod: Boolean
     var archive: Boolean
+    var buffer: Int
+    var bufferList: String
     fun clean()
 }

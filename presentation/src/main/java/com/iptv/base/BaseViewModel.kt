@@ -1,9 +1,7 @@
-package com.iptv
+package com.iptv.base
 
 import androidx.lifecycle.*
-import com.iptv.domain.entities.Result
 import com.iptv.domain.interactor.UseCase
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
 
 abstract class BaseViewModel : ViewModel() {

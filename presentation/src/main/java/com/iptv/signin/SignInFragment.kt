@@ -9,7 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.google.android.material.snackbar.Snackbar
-import com.iptv.BaseFragment
+import com.iptv.base.BaseFragment
 import com.iptv.R
 import com.iptv.SignInFragmentViewModel
 import com.iptv.databinding.FragmentSigninBinding

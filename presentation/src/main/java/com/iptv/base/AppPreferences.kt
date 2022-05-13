@@ -2,11 +2,12 @@ package com.iptv.base
 
 import android.content.Context
 import com.iptv.data.preferences.Preferences
+import com.iptv.domain.entities.HttpCaching
 import javax.inject.Inject
 
 class AppPreferences @Inject constructor(context: Context) : Preferences {
 
-    val prefs = PreferencesHelper.defaultPrefs(context)
+    private val prefs = PreferencesHelper.defaultPrefs(context)
 
     companion object {
         const val PREF_AUTH_SSID = "PREF_AUTH_SSID"
@@ -18,6 +19,8 @@ class AppPreferences @Inject constructor(context: Context) : Preferences {
         const val PREF_PACKET_EXPIRE = "PREF_PACKET_EXPIRE"
         const val PREF_VOD_ENABLED = "PREF_VOD_ENABLED"
         const val PREF_ARCHIVE_ENABLED = "PREF_ARCHIVE_ENABLED"
+        const val PREF_BUFFER = "PREF_BUFFER"
+        const val PREF_BUFFER_LIST = "PREF_BUFFER_LIST"
     }
 
     override var sid: String = ""
@@ -80,6 +83,20 @@ class AppPreferences @Inject constructor(context: Context) : Preferences {
         get() = prefs.getBoolean(PREF_ARCHIVE_ENABLED, false)
         set(value) {
             prefs[PREF_ARCHIVE_ENABLED] = value
+            field = value
+        }
+
+    override var buffer: Int = 0
+        get() = prefs.getInt(PREF_BUFFER, 0)
+        set(value) {
+            prefs[PREF_BUFFER] = value
+            field = value
+        }
+
+    override var bufferList: String = ""
+        get() = requireNotNull(prefs[PREF_BUFFER_LIST, ""])
+        set(value) {
+            prefs[PREF_BUFFER_LIST] = value
             field = value
         }
 

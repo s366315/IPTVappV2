@@ -30,15 +30,18 @@
         <action
             android:id="@+id/action_fragmentLife_to_livePlayerFragment"
             app:destination="@id/livePlayerFragment" />
+        <action
+            android:id="@+id/action_fragmentLife_to_fragmentSettings"
+            app:destination="@id/fragmentSettings" />
     </fragment>
-    <fragment
+    <dialog
         android:id="@+id/fragmentSettings"
         android:name="com.iptv.settings.SettingsFragment"
         android:label="FragmentSettings" />
     <fragment
         android:id="@+id/livePlayerFragment"
         android:name="com.iptv.livePlayer.LivePlayerFragment"
-        android:label="LivePlayerFragment" >
+        android:label="LivePlayerFragment">
         <argument
             android:name="cid"
             app:argType="string" />

@@ -8,6 +8,8 @@ import com.iptv.injection.scopes.ViewModelKey
 import com.iptv.live.LiveFragmentViewModel
 import com.iptv.live.LiveFragmentViewModelImpl
 import com.iptv.livePlayer.LivePlayerViewModel
+import com.iptv.settings.SettingsFragmentViewModel
+import com.iptv.settings.SettingsFragmentViewModelImpl
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -32,4 +34,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SignInFragmentViewModel::class)
     internal abstract fun mainActivityViewModel(viewModel: SignInFragmentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsFragmentViewModel::class)
+    internal abstract fun settingsViewModel(viewModel: SettingsFragmentViewModelImpl): ViewModel
 }

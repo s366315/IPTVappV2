@@ -45,8 +45,8 @@ open class ApplicationModule {
 
     @Singleton
     @Provides
-    fun providePlayer(context: Context): ExoPlayer {
-        val defaultBuffer = 2000
+    fun providePlayer(context: Context, settings: Preferences): ExoPlayer {
+        val defaultBuffer = settings.buffer
         val loadControl = DefaultLoadControl.Builder().setBufferDurationsMs(
             defaultBuffer, defaultBuffer, defaultBuffer, defaultBuffer
         ).build()

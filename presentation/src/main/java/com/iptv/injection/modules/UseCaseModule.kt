@@ -3,10 +3,12 @@ package com.iptv.injection.modules
 import com.iptv.domain.interactor.channelList.ChannelListUseCase
 import com.iptv.domain.interactor.channelUrl.ChannelUrlUseCase
 import com.iptv.domain.interactor.channelsById.ChannelsByIdUseCase
+import com.iptv.domain.interactor.settings.SettingsUseCase
 import com.iptv.domain.interactor.signin.LoginUseCase
 import com.iptv.domain.repository.ChannelListRepository
 import com.iptv.domain.repository.ChannelUrlRepository
 import com.iptv.domain.repository.LoginRepository
+import com.iptv.domain.repository.SettingsRepository
 import dagger.Module
 import dagger.Provides
 
@@ -30,5 +32,10 @@ open class UseCaseModule {
     @Provides
     fun channelUrlUseCase(channelUrlRepository: ChannelUrlRepository): ChannelUrlUseCase {
         return ChannelUrlUseCase(channelUrlRepository)
+    }
+
+    @Provides
+    fun settingsUseCase(settingsRepository: SettingsRepository): SettingsUseCase {
+        return SettingsUseCase(settingsRepository)
     }
 }

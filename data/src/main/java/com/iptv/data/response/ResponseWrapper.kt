@@ -10,5 +10,7 @@ data class ResponseWrapper<T : ModelResponse>(
     @SerializedName("status")
     val status: String,
     @SerializedName("data", alternate = ["items"])
-    val data: T
+    val data: T,
+    @SerializedName("message")
+    val message: T?
 )
