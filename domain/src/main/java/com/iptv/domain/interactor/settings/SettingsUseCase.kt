@@ -13,12 +13,24 @@ class SettingsUseCase(
         val value: String
     )
 
-    override suspend fun createObservable(params: Params?): Result<String> {
+    override suspend fun createObservable(
+        params: Params?,
+        onSuccess: suspend (Result.Success<String>) -> Unit,
+        onError: suspend (Result.Error) -> Unit
+    ) {
         params?.let {
-            return settingsRepository.setSettings(
+            val result = settingsRepository.setSettings(
                 variant = params.variant,
                 value = params.value
             )
+            when (result) {
+                is Result.Success -> {
+                    onSuccess(result)
+                }
+                is Result.Error -> {
+                    onError(result)
+                }
+            }
         } ?: throw IllegalStateException("SettingsUseCase.Params must not be null")
     }
 }

@@ -13,10 +13,23 @@ class ChannelListUseCase(private val channelListRepository: ChannelListRepositor
         val protectedCode: String? = null
     )
 
-    override suspend fun createObservable(params: Params?): Result<List<Channel>> {
-        return channelListRepository.channelList(
+    override suspend fun createObservable(
+        params: Params?,
+        onSuccess: suspend (Result.Success<List<Channel>>) -> Unit,
+        onError: suspend (Result.Error) -> Unit
+    ) {
+        val result = channelListRepository.channelList(
             showProtected = if (params?.showProtected == true) "1" else null,
             protectedCode = params?.protectedCode
         )
+
+        when (result) {
+            is Result.Success -> {
+                onSuccess(result)
+            }
+            is Result.Error -> {
+                onError(result)
+            }
+        }
     }
 }

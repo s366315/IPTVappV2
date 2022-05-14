@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.*
 
 abstract class BaseViewModel : ViewModel() {
 
-    private val _loadingState = MutableStateFlow<Boolean>(false)
+    private val _loadingState = MutableStateFlow(false)
     val loadingState = _loadingState.asStateFlow()
 
     private val _errorData = MutableSharedFlow<String>()
@@ -18,7 +18,7 @@ abstract class BaseViewModel : ViewModel() {
         _errorData.emit(message)
     }
 
-    suspend fun setLoading(isLoading: Boolean) {
+    fun setLoading(isLoading: Boolean) {
         _loadingState.value = isLoading
     }
 
@@ -27,10 +27,6 @@ abstract class BaseViewModel : ViewModel() {
         val error: LiveData<String> = createData()
         val state: LiveData<State> = createData(State.INITIAL)
 
-
-    }
-
-    protected fun <T : Any, Params> UseCase<Params, T>.subscribe() {
 
     }
 

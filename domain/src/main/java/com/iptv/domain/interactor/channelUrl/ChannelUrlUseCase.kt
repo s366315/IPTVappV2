@@ -13,11 +13,24 @@ class ChannelUrlUseCase(
         val channelId: String
     )
 
-    override suspend fun createObservable(params: Params?): Result<ChannelUrl> {
+    override suspend fun createObservable(
+        params: Params?,
+        onSuccess: suspend (Result.Success<ChannelUrl>) -> Unit,
+        onError: suspend (Result.Error) -> Unit
+    ) {
         params?.let {
-            return channelUrlRepository.getUrl(
+            val result = channelUrlRepository.getUrl(
                 channelId = params.channelId
             )
+
+            when (result) {
+                is Result.Success -> {
+                    onSuccess(result)
+                }
+                is Result.Error -> {
+                    onError(result)
+                }
+            }
         } ?: throw IllegalStateException("ChannelUrlUseCase.Params must not be null")
     }
 }

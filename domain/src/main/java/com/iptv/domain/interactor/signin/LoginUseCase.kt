@@ -16,14 +16,27 @@ class LoginUseCase(
         val cliSerial: String
     )
 
-    override suspend fun createObservable(params: Params?): Result<LoginDetails> {
+    override suspend fun createObservable(
+        params: Params?,
+        onSuccess: suspend (Result.Success<LoginDetails>) -> Unit,
+        onError: suspend (Result.Error) -> Unit
+    ) {
         params?.let {
-            return authRepository.login(
+            val result = authRepository.login(
                 login = params.login,
                 password = params.password,
                 softId = params.softId,
                 cliSerial = params.cliSerial
             )
+
+            when (result) {
+                is Result.Success -> {
+                    onSuccess(result)
+                }
+                is Result.Error -> {
+                    onError(result)
+                }
+            }
         } ?: throw IllegalStateException("LoginUseCase.Params must not be null")
     }
 }

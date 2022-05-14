@@ -2,7 +2,7 @@ package com.iptv.injection.modules
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.iptv.SignInFragmentViewModel
+import com.iptv.signin.SignInFragmentViewModel
 import com.iptv.injection.ViewModelFactory
 import com.iptv.injection.scopes.ViewModelKey
 import com.iptv.live.LiveFragmentViewModel

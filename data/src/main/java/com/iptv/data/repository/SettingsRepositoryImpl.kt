@@ -11,10 +11,11 @@ class SettingsRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val preferences: Preferences
 ) : SettingsRepository {
+
     override suspend fun setSettings(variant: SettingsEnum, value: String): Result<String> {
         val data = apiService.setSettings(
             ssid = preferences.sid,
-            variant = variant.invoke(),
+            variant = variant(),
             value = value
         )
 

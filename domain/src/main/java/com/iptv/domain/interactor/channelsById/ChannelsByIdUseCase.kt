@@ -12,7 +12,20 @@ class ChannelsByIdUseCase(private val channelListRepository: ChannelListReposito
         val cids: List<String>
     )
 
-    override suspend fun createObservable(params: Params?): Result<List<Channel>> {
-        return channelListRepository.channelListById(params?.cids ?: emptyList())
+    override suspend fun createObservable(
+        params: Params?,
+        onSuccess: suspend (Result.Success<List<Channel>>) -> Unit,
+        onError: suspend (Result.Error) -> Unit
+    ) {
+        val result = channelListRepository.channelListById(params?.cids ?: emptyList())
+
+        when (result) {
+            is Result.Success -> {
+                onSuccess(result)
+            }
+            is Result.Error -> {
+                onError(result)
+            }
+        }
     }
 }

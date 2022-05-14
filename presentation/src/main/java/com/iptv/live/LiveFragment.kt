@@ -70,7 +70,6 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
         viewModel.errorData bind errorConsumer
         viewModel.bottomSheetState bind hideBottomSheetStateObserver//todo описать функцию стейта
 
-        binding.btnShowChannels.clicks() bind viewModel.onBtnShowChannelsClick
         binding.btnSettings.clicks() bind viewModel.onBtnSettingsClick
 
         initSheetCallbacks()
@@ -86,8 +85,9 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
 
     private fun initPlayer() {
         player.apply {
+
             binding.playerView.player = this
-            addListener(playerListener)
+//            addListener(playerListener)
             playWhenReady = true
             currentMediaItem?.let {
                 play()
@@ -111,19 +111,24 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
     }
 
     private fun initSwipeListener() {
-        binding.root.setOnTouchListener(object : OnSwipeTouchListener(requireContext()) {
+        binding.playerView.setOnTouchListener(swipeListener)
+        binding.root.setOnTouchListener(swipeListener)
+    }
+
+    private val swipeListener: OnSwipeTouchListener by lazy {
+        object : OnSwipeTouchListener(requireContext()) {
             override fun onSwipeBottom() {
-                lifecycleScope.launch {
-                    hideBottomSheetObserver(Unit)
-                }
+                hideBottomSheetObserver(Unit)
             }
 
             override fun onSwipeTop() {
-                lifecycleScope.launch {
-                    channelsBtnObserver(Unit)
-                }
+                channelsBtnObserver(Unit)
             }
-        })
+
+            override fun onTap() {
+                binding.playerView.performClick()
+            }
+        }
     }
 
     private val shapeAppearanceModel = ShapeAppearanceModel()

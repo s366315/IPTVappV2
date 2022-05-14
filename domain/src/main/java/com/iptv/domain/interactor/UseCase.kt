@@ -19,10 +19,16 @@ abstract class UseCase<Params, T> where T : Any {
         return this
     }
 
-    suspend fun subscribe(): Result<T> =
-        createObservable(params)
+    open suspend fun createObservable(
+        onSuccess: suspend (Result.Success<T>) -> Unit,
+        onError: suspend (Result.Error) -> Unit
+    ) {
+        createObservable(params, onSuccess, onError)
+    }
 
     abstract suspend fun createObservable(
-        params: Params? = null
-    ): Result<T>
+        params: Params? = null,
+        onSuccess: suspend (Result.Success<T>) -> Unit,
+        onError: suspend (Result.Error) -> Unit
+    )
 }

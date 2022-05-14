@@ -45,21 +45,19 @@ class SettingsFragmentViewModelImpl @Inject constructor(
             viewModelScope.launch {
                 setLoading(true)
 
-                val result = settingsUseCase.createObservable(
+                settingsUseCase.createObservable(
                     SettingsUseCase.Params(
                         SettingsEnum.HTTP_CACHING,
                         buffer.toString()
-                    )
+                    ),
+                    onSuccess = {
+                        settingsSaveState.emit(it.data)
+                    },
+                    onError = {
+                        setError(it.message)
+                    }
                 )
 
-                when (result) {
-                    is Result.Success -> {
-                        settingsSaveState.emit(result.data)
-                    }
-                    is Result.Error -> {
-                        setError(result.message)
-                    }
-                }
                 setLoading(false)
             }
         }

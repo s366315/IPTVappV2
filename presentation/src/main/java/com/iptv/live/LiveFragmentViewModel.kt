@@ -39,15 +39,18 @@ class LiveFragmentViewModelImpl @Inject constructor(
     private val channelsByIdUseCase: ChannelsByIdUseCase
 ) : LiveFragmentViewModel() {
 
-    override val channelListState = MutableSharedFlow<List<Channel>>(replay = Int.MAX_VALUE, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    override val channelListState = MutableSharedFlow<List<Channel>>(
+        replay = Int.MAX_VALUE,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     override val channelUrlState = MutableSharedFlow<String>()
     override val onRootClickState = MutableSharedFlow<Unit>()
     override val onBtnShowChannelsClickState = MutableSharedFlow<Unit>()
     override val onBtnSettingsClickState = MutableSharedFlow<Unit>()
     override val bottomSheetState = MutableStateFlow(BottomSheetBehavior.STATE_COLLAPSED)
 
-    val timer = ChannelsTimer()
-    val needToUpdateChannels = MutableStateFlow<List<String>>(emptyList())
+    private val timer = ChannelsTimer()
+    private val needToUpdateChannels = MutableStateFlow<List<String>>(emptyList())
 
     override fun onCleared() {
         timer.destroy()
@@ -57,7 +60,7 @@ class LiveFragmentViewModelImpl @Inject constructor(
     init {
 
         viewModelScope.launch {
-//            getChannels()
+            getChannels()
         }
 
         viewModelScope.launch {
@@ -73,37 +76,33 @@ class LiveFragmentViewModelImpl @Inject constructor(
     private suspend fun getChannels() {
         setLoading(true)
 
-        val channels = channelListUseCase.subscribe()
-
-        when (channels) {
-            is Result.Success -> {
-                val channelsList = channels.data
+        channelListUseCase.createObservable(
+            onSuccess = {
+                val channelsList = it.data
                 timer.emitList {
                     needToUpdateChannels.tryEmit(
-                        channelsList.filter { it.isVideo }.filter { it.epgEnd <= System.currentTimeMillis().div(1000) }.map { it.id }
+                        channelsList.filter { it.isVideo }
+                            .filter { it.epgEnd <= System.currentTimeMillis().div(1000) }
+                            .map { it.id }
                     )
                 }
-                channelListState.tryEmit(channels.data)
+                channelListState.emit(it.data)
+            }, onError = {
+                setError(it.message)
             }
-            is Result.Error -> {
-                setError(channels.message)
-            }
-        }
+        )
 
         setLoading(false)
     }
 
     private suspend fun updateChannels(list: List<String>) {
-        val channels = channelsByIdUseCase.createObservable(ChannelsByIdUseCase.Params(list))
-
-        when (channels) {
-            is Result.Success -> {
-                channelListState.tryEmit(channels.data)
+        channelsByIdUseCase.createObservable(ChannelsByIdUseCase.Params(list),
+            onSuccess = {
+                channelListState.emit(it.data)
+            }, onError = {
+                setError(it.message)
             }
-            is Result.Error -> {
-                setError(channels.message)
-            }
-        }
+        )
     }
 
     override var onRootClick: (Unit) -> Unit = {
@@ -137,17 +136,14 @@ class LiveFragmentViewModelImpl @Inject constructor(
             channelUrlUseCase.createObservable(
                 ChannelUrlUseCase.Params(
                     channelId = channelId
-                )
-            ).also {
-                when (it) {
-                    is Result.Success -> {
-                        channelUrlState.emit(it.data.url)
-                    }
-                    is Result.Error -> {
-                        setError(it.message)
-                    }
+                ),
+                onSuccess = {
+                    channelUrlState.emit(it.data.url)
+                },
+                onError = {
+                    setError(it.message)
                 }
-            }
+            )
         }
     }
 }
@@ -157,7 +153,7 @@ class ChannelsTimer {
     var onTick: (() -> Unit)? = null
 
     init {
-        timer = object: CountDownTimer(Long.MAX_VALUE, 1000) {
+        timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 onTick?.invoke()
             }

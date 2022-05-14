@@ -227,20 +227,18 @@ class PlayerService : Service(), CoroutineScope {
         targetChannel.let {
             currentChannel = it
             launch {
-                val result =
-                    channelUrlUseCase.createObservable(ChannelUrlUseCase.Params(channelId = it.id))
+                    channelUrlUseCase.createObservable(ChannelUrlUseCase.Params(channelId = it.id),
+                        onSuccess = {
+                            player.apply {
+                                stop()
+                                setMediaItem(MediaItem.fromUri(it.data.url))
+                                prepare()
+                                play()
+                            }
+                        },
+                        onError = {
 
-                when (result) {
-                    is Result.Success -> {
-                        player.apply {
-                            stop()
-                            setMediaItem(MediaItem.fromUri(result.data.url))
-                            prepare()
-                            play()
-                        }
-                    }
-                    else -> {}
-                }
+                        })
             }
         }
     }

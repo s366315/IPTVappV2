@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.iptv.injection.ViewModelFactory
 import com.iptv.utils.OnSwipeTouchListener
 import dagger.android.support.AndroidSupportInjection
@@ -79,6 +80,12 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.errorData bind errorObserver
+    }
+
     fun View.clicks(): MutableSharedFlow<Unit> {
         val event = MutableSharedFlow<Unit>()
         this.setOnClickListener {
@@ -133,5 +140,9 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private val errorObserver: (String) -> Unit = {
+        Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
     }
 }

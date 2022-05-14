@@ -6,23 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import com.google.android.material.snackbar.Snackbar
 import com.iptv.base.BaseFragment
 import com.iptv.R
-import com.iptv.SignInFragmentViewModel
 import com.iptv.databinding.FragmentSigninBinding
 
 class SignInFragment : BaseFragment<FragmentSigninBinding, SignInFragmentViewModel>() {
-    override val viewModelClass: Class<SignInFragmentViewModel>
-        get() = SignInFragmentViewModel::class.java
+    override val viewModelClass = SignInFragmentViewModel::class.java
 
     override fun viewBindingInflate(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentSigninBinding =
-        FragmentSigninBinding.inflate(inflater, container, false)
+    ) = FragmentSigninBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,26 +39,17 @@ class SignInFragment : BaseFragment<FragmentSigninBinding, SignInFragmentViewMod
             }
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.signedInState.collect(signedInObserver)
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.loadingState.collect {
-                binding.progress.isVisible = it
-            }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.errorData.collect {
-                Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
-            }
-        }
+        viewModel.signedInState bind signedInObserver
+        viewModel.loadingState bind loadingObserver
     }
 
     private val signedInObserver: (Boolean) -> Unit = {
         if (it) {
             Navigation.findNavController(requireView()).navigate(R.id.action_fragmentSignIn_to_fragmentLife)
         }
+    }
+
+    private val loadingObserver: (Boolean) -> Unit = {
+        binding.progress.isVisible = it
     }
 }

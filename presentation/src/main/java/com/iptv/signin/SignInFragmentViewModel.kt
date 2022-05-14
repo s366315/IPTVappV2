@@ -1,9 +1,8 @@
-package com.iptv
+package com.iptv.signin
 
 import androidx.lifecycle.viewModelScope
 import com.iptv.base.BaseViewModel
 import com.iptv.data.preferences.Preferences
-import com.iptv.domain.entities.Result
 import com.iptv.domain.interactor.signin.LoginUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -36,23 +35,21 @@ class SignInFragmentViewModel @Inject constructor(
         viewModelScope.launch {
             setLoading(true)
 
-            val result = loginUseCase.params(
+            loginUseCase.params(
                 LoginUseCase.Params(
                     login = login,
                     password = password,
                     softId = "android",
                     cliSerial = "adrgw23q232ew"
                 )
-            ).subscribe()
-
-            when (result) {
-                is Result.Success -> {
+            ).createObservable(
+                onSuccess = {
                     _signedInState.emit(true)
+                },
+                onError = {
+                    setError(it.message)
                 }
-                is Result.Error -> {
-                    setError(result.message)
-                }
-            }
+            )
 
             setLoading(false)
         }
