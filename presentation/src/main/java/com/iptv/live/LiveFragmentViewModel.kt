@@ -6,7 +6,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.iptv.base.BaseViewModel
 import com.iptv.data.preferences.Preferences
 import com.iptv.domain.entities.Channel
-import com.iptv.domain.entities.Result
 import com.iptv.domain.interactor.channelList.ChannelListUseCase
 import com.iptv.domain.interactor.channelUrl.ChannelUrlUseCase
 import com.iptv.domain.interactor.channelsById.ChannelsByIdUseCase
@@ -23,6 +22,7 @@ abstract class LiveFragmentViewModel : BaseViewModel() {
     abstract val onBtnShowChannelsClickState: SharedFlow<Unit>
     abstract val onBtnSettingsClickState: SharedFlow<Unit>
     abstract val bottomSheetState: StateFlow<Int>
+    abstract val channelState: SharedFlow<Channel>
 
     abstract var onRootClick: (Unit) -> Unit
     abstract var onBtnShowChannelsClick: (Unit) -> Unit
@@ -48,6 +48,7 @@ class LiveFragmentViewModelImpl @Inject constructor(
     override val onBtnShowChannelsClickState = MutableSharedFlow<Unit>()
     override val onBtnSettingsClickState = MutableSharedFlow<Unit>()
     override val bottomSheetState = MutableStateFlow(BottomSheetBehavior.STATE_COLLAPSED)
+    override val channelState = MutableSharedFlow<Channel>()
 
     private val timer = ChannelsTimer()
     private val needToUpdateChannels = MutableStateFlow<List<String>>(emptyList())
@@ -79,7 +80,7 @@ class LiveFragmentViewModelImpl @Inject constructor(
         channelListUseCase.createObservable(
             onSuccess = {
                 val channelsList = it.data
-                timer.emitList {
+                timer.onTick {
                     needToUpdateChannels.tryEmit(
                         channelsList.filter { it.isVideo }
                             .filter { it.epgEnd <= System.currentTimeMillis().div(1000) }
@@ -87,6 +88,7 @@ class LiveFragmentViewModelImpl @Inject constructor(
                     )
                 }
                 channelListState.emit(it.data)
+//                channelState.emit(channelsList.first { channelState.asSharedFlow() })
             }, onError = {
                 setError(it.message)
             }
@@ -124,6 +126,9 @@ class LiveFragmentViewModelImpl @Inject constructor(
     }
 
     override var onChannelClick: (Channel) -> Unit = {
+        viewModelScope.launch {
+            channelState.emit(it)
+        }
         getChannelUrl(it.id)
     }
 
@@ -164,7 +169,7 @@ class ChannelsTimer {
         }
     }
 
-    fun emitList(onTick: () -> Unit) {
+    fun onTick(onTick: () -> Unit) {
         this.onTick = onTick
         timer.start()
     }

@@ -13,7 +13,8 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- 0dp dimensions are used to prevent this view from influencing the size of
          the parent view if it uses "wrap_content". It is expanded to occupy the
@@ -33,6 +34,14 @@
         android:background="@color/exo_bottom_bar_background"
         android:layoutDirection="ltr">
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/player_progress"
+            android:elevation="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="50dp"/>
+
         <LinearLayout android:id="@id/exo_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,13 +52,13 @@
             android:layout_gravity="center_vertical|start"
             android:layoutDirection="ltr">
 
-            <TextView android:id="@id/exo_position"
+            <TextView android:id="@+id/player_position"
                 style="@style/ExoStyledControls.TimeText.Position"/>
 
             <TextView
                 style="@style/ExoStyledControls.TimeText.Separator"/>
 
-            <TextView android:id="@id/exo_duration"
+            <TextView android:id="@+id/player_duration"
                 style="@style/ExoStyledControls.TimeText.Duration"/>
 
         </LinearLayout>
@@ -104,11 +113,15 @@
 
     </FrameLayout>
 
-    <View android:id="@id/exo_progress_placeholder"
+
+    <View
+        android:id="@id/exo_progress_placeholder"
         android:layout_width="match_parent"
         android:layout_height="@dimen/exo_styled_progress_layout_height"
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/exo_styled_progress_margin_bottom"/>
+
+
 
     <LinearLayout android:id="@id/exo_minimal_controls"
         android:layout_width="wrap_content"
@@ -148,5 +161,7 @@
             style="@style/ExoStyledControls.Button.Center.Next"/>
 
     </LinearLayout>
+
+
 
 </merge>

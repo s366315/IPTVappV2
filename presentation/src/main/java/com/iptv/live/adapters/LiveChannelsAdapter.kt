@@ -37,7 +37,7 @@ class LiveChannelsAdapter @Inject constructor() :
         }
     }
 
-    var clickListener: (Channel) -> Unit = {}
+    var clickListener: ((Channel) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         Holder(ItemChannelBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -49,7 +49,7 @@ class LiveChannelsAdapter @Inject constructor() :
     inner class Holder(private val binding: ItemChannelBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(channel: Channel) = with(binding) {
-            root.setOnClickListener { clickListener.invoke(channel) }
+            root.setOnClickListener { clickListener?.invoke(channel) }
             val start = channel.epgStart.timestampToEpg()
             val end = channel.epgEnd.timestampToEpg()
 
@@ -74,7 +74,6 @@ class LiveChannelsAdapter @Inject constructor() :
                 }
                 updateProgress(progressBar, channel)
             }, 1000)
-
         }
     }
 }

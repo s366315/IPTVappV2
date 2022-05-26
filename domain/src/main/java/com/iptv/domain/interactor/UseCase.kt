@@ -6,12 +6,6 @@ import java.util.concurrent.Flow
 
 abstract class UseCase<Params, T> where T : Any {
 
-    sealed class Status<T> {
-        data class Success<T>(val data: T) : Status<T>()
-        class Loading<T> : Status<T>()
-        data class Failure<T>(val e: Throwable) : Status<T>()
-    }
-
     var params: Params? = null
 
     fun params(params: Params? = null): UseCase<Params, T> {
@@ -24,6 +18,12 @@ abstract class UseCase<Params, T> where T : Any {
         onError: suspend (Result.Error) -> Unit
     ) {
         createObservable(params, onSuccess, onError)
+    }
+
+    open suspend fun createObservable(
+        onSuccess: suspend (Result.Success<T>) -> Unit
+    ) {
+        createObservable(params, onSuccess, {})
     }
 
     abstract suspend fun createObservable(

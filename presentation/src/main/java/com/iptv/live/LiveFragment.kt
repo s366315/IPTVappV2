@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -16,20 +19,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.iptv.base.BaseFragment
 import com.iptv.R
 import com.iptv.databinding.FragmentLiveBinding
+import com.iptv.databinding.LayoutPlayerControllerBinding
 import com.iptv.domain.entities.Channel
 import com.iptv.live.adapters.LiveChannelsAdapter
 import com.iptv.service.PlayerService
-import com.iptv.utils.OnSwipeTouchListener
-import com.iptv.utils.dp
-import com.iptv.utils.hideSystemUI
-import com.iptv.utils.showSystemUI
+import com.iptv.utils.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -68,7 +71,8 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
         viewModel.onBtnShowChannelsClickState bind channelsBtnObserver
         viewModel.onBtnSettingsClickState bind settingsBtnObserver
         viewModel.errorData bind errorConsumer
-        viewModel.bottomSheetState bind hideBottomSheetStateObserver//todo описать функцию стейта
+        viewModel.bottomSheetState bind hideBottomSheetStateObserver
+        viewModel.channelState bind channelPlayedObserver
 
         binding.btnSettings.clicks() bind viewModel.onBtnSettingsClick
 
@@ -79,13 +83,15 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
         initPlayer()
 
         binding.recyclerView.adapter = liveAdapter.apply {
-            clickListener = viewModel.onChannelClick //todo сделать слушатель стейта загрузки
+            clickListener = viewModel.onChannelClick
         }
+
+        val b = binding.playerView.rootView.findViewById<ImageButton>(R.id.exo_play_pause)
+        println()
     }
 
     private fun initPlayer() {
         player.apply {
-
             binding.playerView.player = this
 //            addListener(playerListener)
             playWhenReady = true
@@ -141,7 +147,9 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
     }
 
     private val hideBottomSheetStateObserver: (Int) -> Unit = {
-//        bottomSheetBehavior.state = it
+        if (bottomSheetBehavior.state != it) {
+            bottomSheetBehavior.state = it
+        }
 
         when (it) {
             BottomSheetBehavior.STATE_HIDDEN -> {
@@ -177,8 +185,41 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
         }
     }
 
-    private val channelsDataObserver: (List<Channel>) -> Unit = {
-        liveAdapter.submitList(it)
+    private val channelsDataObserver: (List<Channel>) -> Unit = { channels ->
+        liveAdapter.submitList(channels)
+
+        currentChannel?.let { channel ->
+            currentChannel = channels.first { channel.id == it.id }
+        }
+    }
+
+    private val channelPlayedObserver: (Channel) -> Unit = { channel ->
+        currentChannel = channel
+
+        val end = channel.epgEnd.timestampToEpg()
+        binding.playerView.findViewById<TextView>(R.id.player_duration).text = end
+
+        val start = channel.epgStart.timestampToEpg()
+        binding.playerView.findViewById<TextView>(R.id.player_position).text = start
+
+        binding.playerView.findViewById<LinearProgressIndicator>(R.id.player_progress).apply {
+
+            updateProgress(this, channel)
+        }
+    }
+
+    private fun updateProgress(progressBar: LinearProgressIndicator, channel: Channel) {
+        progressBar.postDelayed({
+
+
+
+            progressBar.progress = if (channel.isVideo) {
+                ((System.currentTimeMillis() / 1000 - channel.epgStart) * 100 / (channel.epgEnd - channel.epgStart)).toInt()
+            } else {
+                0
+            }
+            updateProgress(progressBar, channel)
+        }, 1000)
     }
 
     private val errorConsumer: (String) -> Unit = {
