@@ -2,6 +2,7 @@ package com.iptv.injection.modules
 
 import com.iptv.MainActivity
 import com.iptv.injection.scopes.PerActivity
+import com.iptv.screens.ComposeActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -12,4 +13,7 @@ abstract class ActivityModule {
     @PerActivity
     abstract fun mainActivity(): MainActivity
 
+    @ContributesAndroidInjector
+    @PerActivity
+    abstract fun composeActivity(): ComposeActivity
 }

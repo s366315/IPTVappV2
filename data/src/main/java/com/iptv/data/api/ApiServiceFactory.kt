@@ -2,6 +2,7 @@ package com.iptv.data.api
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.iptv.data.preferences.Preferences
 import okhttp3.CertificatePinner
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -21,15 +22,11 @@ object ApiServiceFactory {
 
     fun newInstance(
         endpoint: String,
-        chuckerInterceptor: Interceptor
+        settings: Preferences
     ): ApiService {
         val retrofit = Retrofit.Builder()
             .baseUrl(endpoint)
-            .client(
-                okHttpClient(
-                    chuckerInterceptor
-                )
-            )
+            .client(okHttpClient(settings))
             .addConverterFactory(GsonConverterFactory.create(buildGson()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
@@ -37,13 +34,11 @@ object ApiServiceFactory {
     }
 
     private fun okHttpClient(
-        chuckerInterceptor: Interceptor
+        settings: Preferences
     ): OkHttpClient {
 
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-
-
 
         return OkHttpClient.Builder().apply {
             connectTimeout(CONNECTION_TIMEOUT_MS, TimeUnit.MILLISECONDS)
@@ -62,8 +57,14 @@ object ApiServiceFactory {
                 response
             }
             addInterceptor(loggingInterceptor)
+            addInterceptor(authorizationInterceptor(settings))
 //            addInterceptor(chuckerInterceptor)
         }.build()
+    }
+
+    private fun authorizationInterceptor(settings: Preferences) = Interceptor {
+        val url = it.request().url.newBuilder().addQueryParameter("MWARE_SSID", settings.sid).build()
+        it.proceed(it.request().newBuilder().url(url).build())
     }
 
     private fun buildGson(): Gson {

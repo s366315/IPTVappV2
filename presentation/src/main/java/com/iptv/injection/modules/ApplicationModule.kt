@@ -27,19 +27,13 @@ open class ApplicationModule {
     @Provides
     fun provideContext(app: App): Context = app.applicationContext
 
-    @Singleton
-    @Provides
-    fun provideChucker(app: App): Interceptor {
-        return Interceptor { chain -> chain.proceed(chain.request()) }
-    }
-
     @Provides
     fun provideApiClient(
-        chuckerInterceptor: Interceptor
+        settings: Preferences
     ): ApiService {
         return ApiServiceFactory.newInstance(
             BuildConfig.API_URL,
-            chuckerInterceptor
+            settings
         )
     }
 

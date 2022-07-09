@@ -20,27 +20,23 @@ interface ApiService {
 
     @GET("channel_list")
     suspend fun channelList(
-        @Query("MWARE_SSID") ssid: String,
         @Query("show") showProtected: String?,
         @Query("protect_code") protectedCode: String?,
     ): ChannelsResponse
 
     @GET("epg_current")
     suspend fun channelsById(
-        @Query("MWARE_SSID") ssid: String,
         @Query("epg") epg: String? = "2",
         @Query("cids") cids: String,
     ): ChannelsResponse
 
     @GET("get_url")
     suspend fun getUrl(
-        @Query("MWARE_SSID") ssid: String,
         @Query("cid") channelId: String
     ): ChannelUrlResponse
 
     @GET("settings_set")
     suspend fun setSettings(
-        @Query("MWARE_SSID") ssid: String,
         @Query("var") variant: String,
         @Query("val") value: String
     ): SuccessOperation

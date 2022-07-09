@@ -14,7 +14,6 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun setSettings(variant: SettingsEnum, value: String): Result<String> {
         val data = apiService.setSettings(
-            ssid = preferences.sid,
             variant = variant(),
             value = value
         )

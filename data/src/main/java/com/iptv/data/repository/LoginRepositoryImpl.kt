@@ -36,7 +36,7 @@ class LoginRepositoryImpl @Inject constructor(
         }
 
         preferences.apply {
-            sid = data.sid ?: ""
+            sid = data.sid
             sidName = data.sidName ?: ""
             this.login = data.account?.login ?: ""
             this.password = password

@@ -18,7 +18,7 @@ class ChannelListRepositoryImpl @Inject constructor(
         protectedCode: String?
     ): Result<List<Channel>> {
         val data = apiService.channelList(
-            showProtected = showProtected, protectedCode = protectedCode, ssid = preferences.sid
+            showProtected = showProtected, protectedCode = protectedCode
         )
 
         data.error?.let {
@@ -36,7 +36,6 @@ class ChannelListRepositoryImpl @Inject constructor(
 
     override suspend fun channelListById(cids: List<String>): Result<List<Channel>> {
         val data = apiService.channelsById(
-            ssid = preferences.sid,
             cids = cids.joinToString(separator = ",")
         )
 

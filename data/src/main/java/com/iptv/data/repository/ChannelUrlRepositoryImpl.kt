@@ -14,7 +14,6 @@ class ChannelUrlRepositoryImpl @Inject constructor(
 
     override suspend fun getUrl(channelId: String): Result<ChannelUrl> {
         val response = apiService.getUrl(
-            ssid = preferences.sid,
             channelId = channelId
         )
 

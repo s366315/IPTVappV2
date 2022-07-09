@@ -23,8 +23,8 @@ class AppPreferences @Inject constructor(context: Context) : Preferences {
         const val PREF_BUFFER_LIST = "PREF_BUFFER_LIST"
     }
 
-    override var sid: String = ""
-        get() = requireNotNull(prefs[PREF_AUTH_SSID, ""])
+    override var sid: String? = ""
+        get() = prefs[PREF_AUTH_SSID, null]
         set(value) {
             prefs[PREF_AUTH_SSID] = value
             field = value

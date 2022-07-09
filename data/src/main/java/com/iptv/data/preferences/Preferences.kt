@@ -2,7 +2,7 @@ package com.iptv.data.preferences
 
 
 interface Preferences {
-    var sid: String
+    var sid: String?
     var sidName: String
     var login: String
     var password: String
