@@ -3,14 +3,19 @@ package com.iptv.base
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import com.iptv.R
 import com.iptv.injection.ViewModelFactory
 import com.iptv.utils.OnSwipeTouchListener
 import dagger.android.support.AndroidSupportInjection
@@ -30,12 +35,18 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
 
     protected abstract val viewModelClass: Class<VM>
 
+    protected open var toolbarId: Int? = null
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
     protected abstract fun viewBindingInflate(inflater: LayoutInflater, container: ViewGroup?): VB
 
     protected open fun viewModelStoreOwner(): ViewModelStoreOwner = this
+
+    protected fun navigateTo(navigationRes: Int) {
+        Navigation.findNavController(requireView()).navigate(navigationRes)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +95,10 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.errorData bind errorObserver
+
+        toolbarId?.let {
+            NavigationUI.setupWithNavController(view.findViewById<Toolbar>(it), findNavController())
+        }
     }
 
     fun View.clicks(): MutableSharedFlow<Unit> {

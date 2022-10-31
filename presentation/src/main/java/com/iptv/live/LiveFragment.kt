@@ -173,7 +173,7 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveFragmentViewModel>() 
     }
 
     private val settingsBtnObserver: (Unit) -> Unit = {
-        findNavController().navigate(R.id.action_fragmentLife_to_fragmentSettings)
+        navigateTo(R.id.action_fragmentLife_to_fragmentSettings)
     }
 
     private val channelUrlDataObserver: (String) -> Unit = {

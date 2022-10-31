@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.exoplayer2.*
+import com.iptv.R
 import com.iptv.base.BaseFragment
 import com.iptv.databinding.FragmentLivePlayerBinding
 import javax.inject.Inject
@@ -26,6 +27,8 @@ class LivePlayerFragment : BaseFragment<FragmentLivePlayerBinding, LivePlayerVie
     override val viewModelClass: Class<LivePlayerViewModel>
         get() = LivePlayerViewModel::class.java
 
+    override var toolbarId: Int? = R.id.toolbar
+
     override fun viewBindingInflate(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -33,8 +36,6 @@ class LivePlayerFragment : BaseFragment<FragmentLivePlayerBinding, LivePlayerVie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        NavigationUI.setupWithNavController(binding.toolbar, findNavController())
 
         player.apply {
             binding.playerView.player = this

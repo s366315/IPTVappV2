@@ -45,7 +45,7 @@ class SignInFragment : BaseFragment<FragmentSigninBinding, SignInFragmentViewMod
 
     private val signedInObserver: (Boolean) -> Unit = {
         if (it) {
-            Navigation.findNavController(requireView()).navigate(R.id.action_fragmentSignIn_to_fragmentLife)
+            navigateTo(R.id.action_fragmentSignIn_to_fragmentLife)
         }
     }
 

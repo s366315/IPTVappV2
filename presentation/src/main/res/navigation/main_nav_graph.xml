@@ -8,7 +8,8 @@
     <fragment
         android:id="@+id/fragmentSignIn"
         android:name="com.iptv.signin.SignInFragment"
-        android:label="FragmentSignIn">
+        android:label="FragmentSignIn"
+        tools:layout="@layout/fragment_signin">
         <action
             android:id="@+id/action_fragmentSignIn_to_fragmentLife"
             app:destination="@id/fragmentLife"
