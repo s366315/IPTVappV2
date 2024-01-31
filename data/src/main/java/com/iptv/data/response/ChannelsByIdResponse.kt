@@ -1,15 +1,17 @@
 package com.iptv.data.response
 
+import com.google.gson.annotations.SerializedName
+
 data class ChannelsByIdResponse(
-    val epg: List<EpgContainer>
+    @SerializedName("epg") val epg: List<EpgContainerResponse>
 ) : ModelResponse()
 
-data class EpgContainer(
-    val cid: Int,
-    val epg: List<EpgData>
+data class EpgContainerResponse(
+    @SerializedName("cid") val cid: Int,
+    @SerializedName("epg") val epg: List<EpgDataResponse>
 )
 
-data class EpgData(
-    val ts: String,
-    val progname: String
+data class EpgDataResponse(
+    @SerializedName("ts") val ts: String,
+    @SerializedName("progname") val progname: String
 )

@@ -26,6 +26,7 @@ class ChannelsByIdUseCase(private val channelListRepository: ChannelListReposito
             is Result.Error -> {
                 onError(result)
             }
+            else -> {}
         }
     }
 }

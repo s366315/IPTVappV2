@@ -4,39 +4,33 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(
-    val sid: String?,
-    @SerializedName("sid_name")
-    val sidName: String?,
-    val account: Account?,
-    val services: Services?,
-    val settings: Settings?
+    @SerializedName("sid") val sid: String?,
+    @SerializedName("sid_name") val sidName: String?,
+    @SerializedName("account") val account: AccountResponse?,
+    @SerializedName("services") val services: ServicesResponse?,
+    @SerializedName("settings") val settings: SettingsResponse?
 ) : ModelResponse()
 
-data class Account(
-    val login: String,
-    @SerializedName("packet_name")
-    val packetName: String,
-    @SerializedName("packet_id")
-    val packetId: String,
-    @SerializedName("packet_expire")
-    val packetExpire: Int
+data class AccountResponse(
+    @SerializedName("login") val login: String,
+    @SerializedName("packet_name") val packetName: String,
+    @SerializedName("packet_id") val packetId: String,
+    @SerializedName("packet_expire") val packetExpire: Int
 )
 
-data class Services(
-    val vod: Int?,
-    val archive: Int?,
-    @SerializedName("start_film")
-    val startFilm: Int?
+data class ServicesResponse(
+    @SerializedName("vod") val vod: Int?,
+    @SerializedName("archive") val archive: Int?,
+    @SerializedName("start_film") val startFilm: Int?
 )
 
-data class Settings(
-    @SerializedName("http_caching")
-    val httpCaching: HttpCaching?
+data class SettingsResponse(
+    @SerializedName("http_caching") val httpCaching: HttpCachingResponse?
 )
 
-data class HttpCaching(
-    val value: String?,
-    val list: List<Int>?
+data class HttpCachingResponse(
+    @SerializedName("value") val value: String?,
+    @SerializedName("list") val list: List<Int>?
 )
 
 fun List<Int>.toJString() = Gson().toJson(this)

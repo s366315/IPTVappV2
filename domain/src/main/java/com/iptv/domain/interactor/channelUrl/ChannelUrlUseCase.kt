@@ -30,6 +30,7 @@ class ChannelUrlUseCase(
                 is Result.Error -> {
                     onError(result)
                 }
+                else -> {}
             }
         } ?: throw IllegalStateException("ChannelUrlUseCase.Params must not be null")
     }

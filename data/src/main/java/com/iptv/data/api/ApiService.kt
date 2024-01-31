@@ -3,8 +3,7 @@ package com.iptv.data.api
 import com.iptv.data.response.ChannelUrlResponse
 import com.iptv.data.response.ChannelsResponse
 import com.iptv.data.response.LoginResponse
-import com.iptv.data.response.SuccessOperation
-import com.iptv.domain.entities.Result
+import com.iptv.data.response.SuccessOperationResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -39,7 +38,7 @@ interface ApiService {
     suspend fun setSettings(
         @Query("var") variant: String,
         @Query("val") value: String
-    ): SuccessOperation
+    ): SuccessOperationResponse
 
     //settings_set?var=<pcode|http_caching|stream_server|timeshift|timezone>&val=<value>
 }

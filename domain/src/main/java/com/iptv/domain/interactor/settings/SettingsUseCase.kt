@@ -30,6 +30,7 @@ class SettingsUseCase(
                 is Result.Error -> {
                     onError(result)
                 }
+                else -> {}
             }
         } ?: throw IllegalStateException("SettingsUseCase.Params must not be null")
     }

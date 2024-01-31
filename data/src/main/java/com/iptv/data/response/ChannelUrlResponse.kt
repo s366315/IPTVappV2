@@ -1,5 +1,7 @@
 package com.iptv.data.response
 
+import com.google.gson.annotations.SerializedName
+
 data class ChannelUrlResponse(
-    val url: String?
+    @SerializedName("url") val url: String?
 ) : ModelResponse()

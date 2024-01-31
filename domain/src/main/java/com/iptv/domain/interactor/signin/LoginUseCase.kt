@@ -36,6 +36,7 @@ class LoginUseCase(
                 is Result.Error -> {
                     onError(result)
                 }
+                else -> {}
             }
         } ?: throw IllegalStateException("LoginUseCase.Params must not be null")
     }

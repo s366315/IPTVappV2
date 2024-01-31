@@ -30,6 +30,7 @@ class ChannelListUseCase(private val channelListRepository: ChannelListRepositor
             is Result.Error -> {
                 onError(result)
             }
+            else -> {}
         }
     }
 }

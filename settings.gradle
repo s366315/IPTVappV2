@@ -7,6 +7,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "IP TV"
-include ':presentation'
+include ':app'
 include ':data'
 include ':domain'
